@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "Swift_Weather.ViewController.ios8 (Swift_Weather.ViewController)() -&gt; Swift.Bool:ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "locationManager.desiredAccuracy">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

@@ -11,12 +11,12 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     let locationManager:CLLocationManager = CLLocationManager()
-                            
     @IBOutlet weak var location: UILabel!
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet weak var loadingIndicator:UIActivityIndicatorView!
     @IBOutlet weak var loading: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -27,7 +27,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.loadingIndicator.startAnimating()
   
         let background = UIImage(named: "background.png")
-        self.view.backgroundColor = UIColor(patternImage: background)
+        self.view.backgroundColor = UIColor(patternImage: background!)
         
         if (ios8()) {
             locationManager.requestAlwaysAuthorization()
@@ -36,7 +36,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
 
     func ios8() -> Bool {
-        return UIDevice.currentDevice().systemVersion == "8.0"
+        return UIDevice.currentDevice().systemVersion == "8.3"
     }
     
     override func didReceiveMemoryWarning() {
@@ -45,7 +45,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        var location:CLLocation = locations[locations.count - 1] as CLLocation
+        var location:CLLocation = locations[locations.count - 1] as! CLLocation
         if (location.horizontalAccuracy > 0) {
             println(location.coordinate.latitude)
             println(location.coordinate.longitude)
@@ -64,7 +64,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             success: { (operation: AFHTTPRequestOperation!,
                 responseObject: AnyObject!) in
                 println("JSON: " + responseObject.description!)
-                self.updateUISuccess(responseObject as NSDictionary!)
+                self.updateUISuccess(responseObject as! NSDictionary!)
             },
             failure: { (operation: AFHTTPRequestOperation!,
                 error: NSError!) in
@@ -77,11 +77,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.loading.text = nil
         self.loadingIndicator.hidden = true
         
-        if let tempResult = ((jsonResult["main"]? as NSDictionary)["temp"] as? Double) {
+        if let tempResult = ((jsonResult["main"] as! NSDictionary)["temp"] as? Double) {
             
             // If we can get the temperature from JSON correctly, we assume the rest of JSON is correct.
             var temperature: Double
-            if let sys = (jsonResult["sys"]? as? NSDictionary) {
+            if let sys = (jsonResult["sys"] as? NSDictionary) {
                 if let country = (sys["country"] as? String) {
                     if (country == "US") {
                         // Convert temperature to Fahrenheit if user is within the US
@@ -102,10 +102,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                     self.location.text = name
                 }
                 
-                if let weather = jsonResult["weather"]? as? NSArray {
-                    var condition = (weather[0] as NSDictionary)["id"] as Int
-                    var sunrise = sys["sunrise"] as Double
-                    var sunset = sys["sunset"] as Double
+                if let weather = jsonResult["weather"] as? NSArray {
+                    var condition = (weather[0] as! NSDictionary)["id"] as! Int
+                    var sunrise = sys["sunrise"] as! Double
+                    var sunset = sys["sunset"] as! Double
                     
                     var nightTime = false
                     var now = NSDate().timeIntervalSince1970
@@ -199,8 +199,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.icon.image = UIImage(named: "dunno")
         }
     }
-    
-    
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         println(error)
         self.loading.text = "地理位置信息不可用"
